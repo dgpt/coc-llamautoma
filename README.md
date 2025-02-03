@@ -87,28 +87,28 @@ nmap <silent> <Leader>ls :CocCommand llama.sync<CR>
 
 ## Commands
 
-### `:CocCommand llama.chat`
+### `:CocCommand llamautoma.chat`
 - Opens an interactive chat window with the AI
 - Context-aware of your current file and workspace
 - Supports code snippets and multi-line input
 - Use `q` to close the chat window
 - History is preserved per session
 
-### `:CocCommand llama.edit`
+### `:CocCommand llamautoma.edit`
 - Edit the current file with AI assistance
 - Supports multi-file edits
 - Shows preview of changes before applying
 - Safety checks for dangerous modifications
 - Undo/redo support for AI changes
 
-### `:CocCommand llama.compose`
+### `:CocCommand llamautoma.compose`
 - Generate new files with AI
 - Supports multiple file generation
 - Context-aware of your project structure
 - Automatic import management
 - Template-based generation
 
-### `:CocCommand llama.sync`
+### `:CocCommand llamautoma.sync`
 - Synchronize workspace with AI
 - Respects `.gitignore` patterns
 - Progress indicator for large workspaces

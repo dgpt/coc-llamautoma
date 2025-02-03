@@ -1,4 +1,4 @@
-import { workspace, window } from '../tests/mocks/coc.nvim'
+import { workspace, window } from 'coc.nvim'
 import { LlamautomaClient } from './client'
 
 export class LlamautomaCommands {

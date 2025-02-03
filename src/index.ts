@@ -31,10 +31,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const llamautomaCommands = new LlamautomaCommands(client)
 
   context.subscriptions.push(
-    commands.registerCommand('llama.chat', () => llamautomaCommands.chat()),
-    commands.registerCommand('llama.edit', () => llamautomaCommands.edit()),
-    commands.registerCommand('llama.compose', () => llamautomaCommands.compose()),
-    commands.registerCommand('llama.sync', () => llamautomaCommands.sync())
+    commands.registerCommand('llamautoma.chat', () => llamautomaCommands.chat()),
+    commands.registerCommand('llamautoma.edit', () => llamautomaCommands.edit()),
+    commands.registerCommand('llamautoma.compose', () => llamautomaCommands.compose()),
+    commands.registerCommand('llamautoma.sync', () => llamautomaCommands.sync())
   )
 }
 

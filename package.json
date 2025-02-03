@@ -1,19 +1,10 @@
 {
   "name": "coc-llamautoma",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "AI-powered code generation and editing for coc.nvim",
   "author": "https://github.com/dgpt",
   "license": "MIT",
   "main": "dist/index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dgpt/vim-llama.git"
-  },
-  "bugs": {
-    "url": "https://github.com/dgpt/vim-llama/issues"
-  },
-  "homepage": "https://github.com/dgpt/vim-llama#readme",
-  "publisher": "dgpt",
   "keywords": [
     "coc.nvim",
     "neovim",
@@ -30,19 +21,19 @@
   "contributes": {
     "commands": [
       {
-        "command": "llama.chat",
+        "command": "llamautoma.chat",
         "title": "Chat with AI"
       },
       {
-        "command": "llama.edit",
+        "command": "llamautoma.edit",
         "title": "Edit with AI"
       },
       {
-        "command": "llama.compose",
+        "command": "llamautoma.compose",
         "title": "Compose with AI"
       },
       {
-        "command": "llama.sync",
+        "command": "llamautoma.sync",
         "title": "Sync workspace with AI"
       }
     ],
