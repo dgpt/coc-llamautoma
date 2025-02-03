@@ -1,4 +1,4 @@
-import { workspace } from '../tests/mocks/coc.nvim'
+import { workspace } from 'coc.nvim'
 
 export interface LlamautomaResponse {
   text?: string

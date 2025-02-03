@@ -1,10 +1,10 @@
 {
   "name": "coc-llamautoma",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "description": "AI-powered code generation and editing for coc.nvim",
   "author": "https://github.com/dgpt",
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "keywords": [
     "coc.nvim",
     "neovim",
