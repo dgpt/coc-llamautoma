@@ -1,34 +1,19 @@
 import { describe, expect, test, mock, beforeEach, afterEach } from 'bun:test'
-import { commands, workspace, createMockContext } from '../mocks/coc.nvim'
-import { activate, deactivate } from '../../src/index'
-import { TEST_SERVER_URL } from '../setup'
+import type { ExtensionContext } from 'coc.nvim'
+import { TEST_SERVER_URL, createMockContext } from '../setup'
+import { window, workspace, commands } from 'coc.nvim'
 
 describe('Extension Activation', () => {
-  let context: ReturnType<typeof createMockContext>
+  let context: ExtensionContext
   let registeredCommands: string[]
-  let mockRegisterCommand: ReturnType<typeof mock>
-  let mockConfig: Record<string, any>
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    context = createMockContext()
     registeredCommands = []
-    mockRegisterCommand = mock((name: string, callback: (...args: any[]) => any) => {
+    commands.registerCommand = mock((name: string) => {
       registeredCommands.push(name)
       return { dispose: mock(() => {}) }
     })
-    commands.registerCommand = mockRegisterCommand
-
-    // Mock configuration
-    mockConfig = {
-      secret: '',
-      serverUrl: TEST_SERVER_URL,
-      timeout: 30000,
-    }
-    workspace.getConfiguration = () => ({
-      get: (key: string, defaultValue?: any) => mockConfig[key] ?? defaultValue,
-    })
-
-    // Create mock context with proper logger type
-    context = createMockContext()
   })
 
   afterEach(() => {
@@ -36,10 +21,15 @@ describe('Extension Activation', () => {
   })
 
   test('should register all commands', async () => {
+    const { activate } = await import('../../src/index')
     await activate(context)
 
-    const expectedCommands = ['llama.chat', 'llama.edit', 'llama.compose', 'llama.sync']
-
+    const expectedCommands = [
+      'llamautoma.chat',
+      'llamautoma.edit',
+      'llamautoma.compose',
+      'llamautoma.sync',
+    ]
     for (const command of expectedCommands) {
       expect(registeredCommands).toContain(command)
     }
@@ -48,17 +38,30 @@ describe('Extension Activation', () => {
   })
 
   test('should not start local server when secret is configured', async () => {
-    mockConfig.secret = 'test-secret'
+    const mockConfig = {
+      secret: 'test-secret',
+      serverUrl: TEST_SERVER_URL,
+      timeout: 30000,
+    }
+
+    workspace.getConfiguration = (section?: string) => ({
+      get: <T>(key: string, defaultValue?: T): T => (mockConfig as any)[key] ?? defaultValue,
+      update: mock(() => Promise.resolve()),
+      has: mock(() => false),
+      inspect: mock(() => undefined),
+    })
+
+    const { activate } = await import('../../src/index')
     await activate(context)
 
-    // Verify the server URL is set to the hosted URL when secret is configured
     expect(mockConfig.serverUrl).toBe(TEST_SERVER_URL)
   })
 
   test('should use local server URL when no secret is configured', async () => {
+    const { activate } = await import('../../src/index')
     await activate(context)
 
-    // Verify the server URL is set to localhost when no secret is configured
-    expect(mockConfig.serverUrl).toBe(TEST_SERVER_URL)
+    const config = workspace.getConfiguration('llamautoma')
+    expect(config.get('serverUrl', '')).toBe(TEST_SERVER_URL)
   })
 })
