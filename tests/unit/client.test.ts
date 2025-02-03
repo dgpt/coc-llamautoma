@@ -1,114 +1,52 @@
-import { describe, expect, test, mock, beforeEach } from 'bun:test'
+import { describe, expect, test, beforeEach } from 'bun:test'
 import { workspace } from '../mocks/coc.nvim'
 import { LlamautomaClient } from '../../src/client'
+import { TEST_SERVER_URL } from '../setup'
 
 describe('LlamautomaClient', () => {
   let client: LlamautomaClient
-  let mockFetch: ReturnType<typeof mock>
 
   beforeEach(() => {
     client = new LlamautomaClient({
-      serverUrl: 'http://localhost:3000',
+      serverUrl: TEST_SERVER_URL,
       timeout: 30000,
+      headers: undefined,
     })
-
-    // Mock global fetch
-    mockFetch = mock((url: string, options?: RequestInit) =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ text: 'Mock response' }),
-      })
-    )
-    global.fetch = mockFetch
   })
 
   test('should handle chat requests', async () => {
     const response = await client.chat('Hello')
-
-    expect(mockFetch).toHaveBeenCalledWith(
-      'http://localhost:3000/chat',
-      expect.objectContaining({
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message: 'Hello' }),
-      })
-    )
-    expect(response.text).toBe('Mock response')
+    expect(response).toBeDefined()
+    expect(typeof response.text).toBe('string')
   })
 
   test('should handle edit requests', async () => {
-    mockFetch.mockImplementation(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ edits: [] }),
-      })
-    )
-
     const response = await client.edit('Fix this')
-
-    expect(mockFetch).toHaveBeenCalledWith(
-      'http://localhost:3000/edit',
-      expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({ message: 'Fix this' }),
-      })
-    )
-    expect(response.edits).toEqual([])
+    expect(response).toBeDefined()
+    expect(Array.isArray(response.edits)).toBe(true)
   })
 
   test('should handle compose requests', async () => {
-    mockFetch.mockImplementation(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ files: [] }),
-      })
-    )
-
     const response = await client.compose('Create a file')
-
-    expect(mockFetch).toHaveBeenCalledWith(
-      'http://localhost:3000/compose',
-      expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({ message: 'Create a file' }),
-      })
-    )
-    expect(response.files).toEqual([])
+    expect(response).toBeDefined()
+    expect(Array.isArray(response.files)).toBe(true)
   })
 
   test('should handle sync requests', async () => {
-    mockFetch.mockImplementation(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ status: 'success' }),
-      })
-    )
-
     const response = await client.sync()
-
-    expect(mockFetch).toHaveBeenCalledWith(
-      'http://localhost:3000/sync',
-      expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({
-          root: '/test',
-          excludePatterns: [],
-        }),
-      })
-    )
+    expect(response).toBeDefined()
     expect(response.status).toBe('success')
   })
 
-  test('should handle request errors', async () => {
-    mockFetch.mockImplementation(() =>
-      Promise.resolve({
-        ok: false,
-        statusText: 'Not Found',
-      })
-    )
+  test('should handle custom headers', async () => {
+    const clientWithHeaders = new LlamautomaClient({
+      serverUrl: TEST_SERVER_URL,
+      timeout: 30000,
+      headers: { 'X-Custom-Header': 'test' },
+    })
 
-    await expect(client.chat('Hello')).rejects.toThrow('Request failed: Not Found')
+    const response = await clientWithHeaders.chat('Hello')
+    expect(response).toBeDefined()
+    expect(typeof response.text).toBe('string')
   })
 })

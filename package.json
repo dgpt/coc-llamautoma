@@ -55,6 +55,11 @@
           "type": "number",
           "default": 30000,
           "description": "Request timeout in milliseconds"
+        },
+        "llamautoma.secret": {
+          "type": "string",
+          "default": "",
+          "description": "Secret key for accessing hosted Llamautoma server. If not set, will start a local server."
         }
       }
     }
@@ -63,12 +68,14 @@
     "clean": "rimraf dist",
     "watch": "bun run build.ts --watch",
     "build": "bun run build.ts",
-    "test": "bun test"
+    "test": "bun test",
+    "postinstall": "bun run build"
   },
   "dependencies": {
     "chokidar": "^3.5.3",
     "coc.nvim": "^0.0.83-next.9",
     "glob": "^10.3.10",
+    "llamautoma": "0.1.3",
     "vscode-uri": "^3.0.8"
   },
   "devDependencies": {

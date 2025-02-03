@@ -19,8 +19,10 @@ AI-powered code generation and editing for coc.nvim, powered by Llamautoma. This
 
 - Neovim >= 0.10.0 or Vim >= 9.0
 - [coc.nvim](https://github.com/neoclide/coc.nvim) >= 0.0.80
-- [Llamautoma Server](../llamautoma/README.md) running locally or remotely
-- Node.js >= 16.0.0
+- [Bun](https://bun.sh/)
+- [Ollama](https://ollama.ai/) with required models:
+  - Default: `qwen2.5-coder:7b` (production)
+  - Testing: `qwen2.5-coder:1.5b` (faster for tests)
 
 ## Installation
 

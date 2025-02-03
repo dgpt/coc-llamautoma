@@ -16,18 +16,21 @@ export interface LlamautomaResponse {
 export class LlamautomaClient {
   private serverUrl: string
   private timeout: number
+  private headers: Record<string, string>
 
-  constructor(config: { serverUrl: string; timeout: number }) {
+  constructor(config: { serverUrl: string; timeout: number; headers?: Record<string, string> }) {
     this.serverUrl = config.serverUrl
     this.timeout = config.timeout
+    this.headers = {
+      'Content-Type': 'application/json',
+      ...config.headers,
+    }
   }
 
   private async request<T>(endpoint: string, body?: any): Promise<T> {
     const response = await fetch(`${this.serverUrl}${endpoint}`, {
       method: body ? 'POST' : 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: this.headers,
       body: body ? JSON.stringify(body) : undefined,
       signal: AbortSignal.timeout(this.timeout),
     })
@@ -40,15 +43,39 @@ export class LlamautomaClient {
   }
 
   async chat(message: string): Promise<LlamautomaResponse> {
-    return this.request<LlamautomaResponse>('/chat', { message })
+    return this.request<LlamautomaResponse>('/chat', {
+      type: 'chat',
+      messages: [{ role: 'user', content: message }],
+      modelName: 'qwen2.5-coder:1.5b',
+      host: 'http://localhost:11434',
+      safetyConfig: {
+        maxInputLength: 8192,
+      },
+    })
   }
 
   async edit(message: string): Promise<LlamautomaResponse> {
-    return this.request<LlamautomaResponse>('/edit', { message })
+    return this.request<LlamautomaResponse>('/edit', {
+      type: 'edit',
+      messages: [{ role: 'user', content: message }],
+      modelName: 'qwen2.5-coder:1.5b',
+      host: 'http://localhost:11434',
+      safetyConfig: {
+        maxInputLength: 8192,
+      },
+    })
   }
 
   async compose(message: string): Promise<LlamautomaResponse> {
-    return this.request<LlamautomaResponse>('/compose', { message })
+    return this.request<LlamautomaResponse>('/compose', {
+      type: 'compose',
+      messages: [{ role: 'user', content: message }],
+      modelName: 'qwen2.5-coder:1.5b',
+      host: 'http://localhost:11434',
+      safetyConfig: {
+        maxInputLength: 8192,
+      },
+    })
   }
 
   async sync(): Promise<LlamautomaResponse> {
@@ -56,8 +83,14 @@ export class LlamautomaClient {
     const workspaceRoot = workspace.root
 
     return this.request<LlamautomaResponse>('/sync', {
+      type: 'sync',
       root: workspaceRoot,
       excludePatterns: config.get<string[]>('excludePatterns', []),
+      modelName: 'qwen2.5-coder:1.5b',
+      host: 'http://localhost:11434',
+      safetyConfig: {
+        maxInputLength: 8192,
+      },
     })
   }
 }

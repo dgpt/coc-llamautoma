@@ -1,36 +1,32 @@
-import { beforeEach } from 'bun:test'
-import type { Window, Workspace, Commands } from './types'
+import { beforeEach, mock, beforeAll, afterAll } from 'bun:test'
 import { window, workspace, commands } from './mocks/coc.nvim'
+import server from 'llamautoma'
 
-// Extend the global scope
-declare global {
-  var window: Window
-  var workspace: Workspace
-  var commands: Commands
-}
+mock.module('coc.nvim', () => ({
+  window,
+  workspace,
+  commands,
+}))
 
-beforeEach(() => {
-  // Reset global mocks before each test
-  global.window = window as Window
-  global.workspace = workspace as Workspace
-  global.commands = commands as Commands
+const TEST_PORT = 3001
+export const TEST_SERVER_URL = `http://localhost:${TEST_PORT}`
 
-  // Set up default fetch mock
-  global.fetch = ((input: string | URL | Request, init?: RequestInit) => {
-    const url =
-      typeof input === 'string' ? input : input instanceof URL ? input.toString() : input.url
+let serverInstance: ReturnType<typeof Bun.serve> | null = null
 
-    if (url.endsWith('/health')) {
-      return Promise.resolve({
-        ok: true,
-        status: 200,
-        statusText: 'OK',
-      } as Response)
-    }
-    return Promise.resolve({
-      ok: false,
-      status: 404,
-      statusText: 'Not Found',
-    } as Response)
-  }) as typeof fetch
+beforeAll(async () => {
+  process.env.NODE_ENV = 'test'
+  // Start a single server instance for all tests
+  const testServer = { ...server, port: TEST_PORT }
+  serverInstance = Bun.serve(testServer)
+  console.log('Started test Llamautoma server')
+})
+
+afterAll(() => {
+  process.env.NODE_ENV = 'development'
+  // Stop the server after all tests
+  if (serverInstance) {
+    serverInstance.stop()
+    console.log('Stopped test Llamautoma server')
+    serverInstance = null
+  }
 })
