@@ -1,6 +1,6 @@
 await Bun.build({
   entrypoints: ['./src/index.ts'],
-  outdir: './dist',
+  outdir: './lib',
   target: 'node',
   minify: true,
   define: {

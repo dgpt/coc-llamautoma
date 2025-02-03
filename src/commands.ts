@@ -37,8 +37,9 @@ export class LlamautomaCommands {
       if (response.edits) {
         for (const edit of response.edits) {
           if (edit.file === doc.uri) {
+            const buffer = await workspace.nvim.buffer
             const lines = edit.content.split('\n')
-            await doc.buffer.setLines(lines, { start: 0, end: -1 })
+            await buffer.setLines(lines, { start: 0, end: doc.lineCount })
           }
         }
       }
