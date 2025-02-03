@@ -1,4 +1,4 @@
-import { ExtensionContext, workspace, commands } from 'coc.nvim'
+import { ExtensionContext, workspace, commands, window } from 'coc.nvim'
 import { LlamautomaClient } from './client'
 import { LlamautomaCommands } from './commands'
 import server from 'llamautoma'
@@ -6,6 +6,9 @@ import server from 'llamautoma'
 let serverProcess: ReturnType<typeof Bun.serve> | null = null
 
 export async function activate(context: ExtensionContext): Promise<void> {
+  // Log activation
+  window.showInformationMessage('Llamautoma activated!')
+
   const config = workspace.getConfiguration('llamautoma')
   const secret = config.get<string>('secret', '')
   const serverUrl = secret
@@ -30,11 +33,20 @@ export async function activate(context: ExtensionContext): Promise<void> {
   })
   const llamautomaCommands = new LlamautomaCommands(client)
 
+  // Register commands
   context.subscriptions.push(
-    commands.registerCommand('llamautoma.chat', () => llamautomaCommands.chat()),
-    commands.registerCommand('llamautoma.edit', () => llamautomaCommands.edit()),
-    commands.registerCommand('llamautoma.compose', () => llamautomaCommands.compose()),
-    commands.registerCommand('llamautoma.sync', () => llamautomaCommands.sync())
+    commands.registerCommand('llamautoma.chat', async () => {
+      await llamautomaCommands.chat()
+    }),
+    commands.registerCommand('llamautoma.edit', async () => {
+      await llamautomaCommands.edit()
+    }),
+    commands.registerCommand('llamautoma.compose', async () => {
+      await llamautomaCommands.compose()
+    }),
+    commands.registerCommand('llamautoma.sync', async () => {
+      await llamautomaCommands.sync()
+    })
   )
 }
 

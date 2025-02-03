@@ -15,6 +15,6 @@
     "forceConsistentCasingInFileNames": true,
     "types": ["bun-types", "node", "./src/coc.nvim.d.ts"]
   },
-  "include": ["src/*", "src/**/*", "tests/**/*", "src/coc.nvim.d.ts"],
+  "include": ["./*.ts", "src/*", "src/**/*", "tests/**/*", "src/coc.nvim.d.ts"],
   "exclude": ["node_modules", "dist"]
 }

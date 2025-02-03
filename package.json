@@ -1,6 +1,6 @@
 {
   "name": "coc-llamautoma",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "AI-powered code generation and editing for coc.nvim",
   "author": "https://github.com/dgpt",
   "license": "MIT",
@@ -16,7 +16,10 @@
     "coc": "^0.0.80"
   },
   "activationEvents": [
-    "*"
+    "onCommand:llamautoma.chat",
+    "onCommand:llamautoma.edit",
+    "onCommand:llamautoma.compose",
+    "onCommand:llamautoma.sync"
   ],
   "contributes": {
     "commands": [
