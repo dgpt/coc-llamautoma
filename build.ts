@@ -3,8 +3,7 @@ Bun.build({
   outdir: './lib',
   target: 'node',
   minify: true,
-  format: 'iife',
-  packages: 'external',
+  format: 'esm',
   define: {
     'process.env.NODE_ENV': '"production"',
   },

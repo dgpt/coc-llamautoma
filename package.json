@@ -1,6 +1,6 @@
 {
   "name": "coc-llamautoma",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "AI-powered code generation and editing for coc.nvim",
   "author": "https://github.com/dgpt",
   "license": "MIT",
@@ -69,14 +69,16 @@
   },
   "scripts": {
     "clean": "rimraf dist",
-    "watch": "bun run build.ts --watch",
-    "build": "bun run build.ts",
+    "build:pre": "bun run build.ts",
+    "build:post": "esbuild lib/index.js --allow-overwrite --bundle --minify --main-fields=module,main --external:coc.nvim --platform=node --target=node18 --outfile=lib/index.js",
+    "build": "bun run build:pre && bun run build:post",
     "test": "bun test",
     "postinstall": "bun run build"
   },
   "dependencies": {
     "chokidar": "^3.5.3",
     "coc.nvim": "^0.0.83-next.9",
+    "esbuild": "^0.19.8",
     "glob": "^10.3.10",
     "llamautoma": "0.1.3",
     "vscode-uri": "^3.0.8"
