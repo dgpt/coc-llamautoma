@@ -3,6 +3,13 @@ import type { ExtensionContext } from 'coc.nvim'
 import { TEST_SERVER_URL, createMockContext } from '../setup'
 import { window, workspace, commands } from 'coc.nvim'
 
+// Mock Bun.serve to prevent actual server starts
+mock.module('bun', () => ({
+  serve: mock(() => ({
+    stop: mock(() => {}),
+  })),
+}))
+
 describe('Extension Activation', () => {
   let context: ExtensionContext
   let registeredCommands: string[]

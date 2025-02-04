@@ -98,7 +98,6 @@ export function createMockContext(): ExtensionContext {
     },
   } as unknown as ExtensionContext
 }
-
 let serverInstance: ReturnType<typeof Bun.serve> | null = null
 
 beforeAll(async () => {
@@ -123,3 +122,4 @@ afterAll(() => {
 beforeEach(() => {
   mock.restore()
 })
+
