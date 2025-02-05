@@ -17,7 +17,7 @@ describe('LlamautomaClient', () => {
   test('should handle chat requests', async () => {
     const response = await client.chat('Hello')
     expect(response).toBeDefined()
-    expect(typeof response.text).toBe('string')
+    expect(typeof response.content).toBe('string')
   })
 
   test('should handle edit requests', async () => {
@@ -47,6 +47,6 @@ describe('LlamautomaClient', () => {
 
     const response = await clientWithHeaders.chat('Hello')
     expect(response).toBeDefined()
-    expect(typeof response.text).toBe('string')
+    expect(typeof response.content).toBe('string')
   })
 })

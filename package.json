@@ -49,7 +49,7 @@
           "default": true,
           "description": "Enable coc-llamautoma"
         },
-        "llamautoma.serverUrl": {
+        "llamautoma.url": {
           "type": "string",
           "default": "http://localhost:3000",
           "description": "URL of the Llamautoma server"
@@ -68,19 +68,16 @@
     }
   },
   "scripts": {
-    "clean": "rimraf dist",
-    "build:pre": "bun run build.ts",
-    "build:post": "esbuild lib/index.js --allow-overwrite --bundle --minify --main-fields=module,main --external:coc.nvim --platform=node --target=node18 --outfile=lib/index.js",
-    "build": "bun run build:pre && bun run build:post",
-    "test": "bun test",
-    "postinstall": "bun run build"
+    "clean": "rimraf lib",
+    "build": "bun run build.ts",
+    "postinstall": "npm run build"
   },
   "dependencies": {
-    "chokidar": "^3.5.3",
+    "llamautoma-types": "file:../llamautoma-types",
+    "abort-controller": "^3.0.0",
     "coc.nvim": "^0.0.83-next.9",
-    "esbuild": "^0.19.8",
     "glob": "^10.3.10",
-    "llamautoma": "0.1.4",
+    "node-fetch": "^2.7.0",
     "vscode-uri": "^3.0.8"
   },
   "devDependencies": {

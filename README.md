@@ -1,57 +1,60 @@
-# coc-llamautoma
+# 🦙 💻 coc-llamautoma
 
-AI-powered code generation and editing for coc.nvim, powered by Llamautoma. This extension provides seamless integration between your Vim/Neovim editor and the Llamautoma AI server, enabling advanced code generation, editing, and assistance features.
+A powerful [coc.nvim](https://github.com/neoclide/coc.nvim) extension that brings AI-powered code generation, editing, and assistance directly to your Neovim editor. Built on top of the Llamautoma framework.
 
-## Features
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Neovim](https://img.shields.io/badge/Neovim-57A143?style=flat-square&logo=neovim&logoColor=white)](https://neovim.io/)
+[![coc.nvim](https://img.shields.io/badge/coc.nvim-2a2a2a?style=flat-square)](https://github.com/neoclide/coc.nvim)
 
-- **AI Chat**: Interactive chat with context-aware AI about your code
-- **Smart Editing**: AI-assisted code modifications across multiple files
-- **Code Generation**: Generate new files and code based on natural language descriptions
-- **Workspace Sync**: Keep AI context up-to-date with your workspace changes
-- **LSP Integration**: Full Language Server Protocol support
-- **Real-time Updates**: Streaming responses for immediate feedback
-- **Safety Checks**: Built-in safety measures for code modifications
-- **Git-aware**: Respects `.gitignore` patterns during synchronization
-- **Multi-file Support**: Handle changes across multiple files seamlessly
-- **Autocompletion**: AI-powered code completion suggestions
+## ✨ Features
 
-## Prerequisites
+- 🤖 AI-powered chat interface for code assistance
+- ✏️ Smart code editing and modifications
+- 🔨 Code generation and file composition
+- 🔄 Workspace synchronization with AI context
+- ⚡ Real-time streaming responses
+- 🔒 Built-in safety controls
 
-- Neovim >= 0.10.0 or Vim >= 9.0
-- [coc.nvim](https://github.com/neoclide/coc.nvim) >= 0.0.80
-- [Bun](https://bun.sh/)
-- [Ollama](https://ollama.ai/) with required models:
-  - Default: `qwen2.5-coder:7b` (production)
-  - Testing: `qwen2.5-coder:1.5b` (faster for tests)
+## 🚀 Quick Start
 
-## Installation
+### Prerequisites
 
-### Via coc.nvim
+- [Neovim](https://neovim.io/) >= 0.8.0
+- [coc.nvim](https://github.com/neoclide/coc.nvim)
+- [Node.js](https://nodejs.org/) >= 16.0.0
+- Running [Llamautoma server](https://github.com/llamautoma/llamautoma)
+- [Ollama](https://ollama.com/)
+   - Default: `qwen2.5-coder:7b`
+
+(Cloud-based solution coming soon)
+(VSCode extension maybe coming soon?)
+
+### Installation
+
+1. Install using your preferred package manager:
 
 ```vim
-:CocInstall coc-llamautoma
+" Using vim-plug
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'dgpt/coc-llamautoma'
+
+" Using packer.nvim
+use {'neoclide/coc.nvim', branch = 'release'}
+use {'dgpt/coc-llamautoma'}
 ```
 
-### Manual Installation
-
-```bash
-cd ~/.config/coc/extensions
-git clone https://github.com/dgpt/coc-llamautoma
-cd coc-llamautoma
-bun install
-bun run build
+```vim
+" Using Vundle
+Plugin 'neoclide/coc.nvim'
+Plugin 'dgpt/coc-llamautoma'
 ```
 
-## Configuration
-
-### Basic Settings
-
-Add these configurations to your `coc-settings.json`:
+2. Configure the extension in your coc-settings.json:
 
 ```json
 {
   "llamautoma.enable": true,
-  "llamautoma.serverUrl": "http://localhost:3000",
+  "llamautoma.url": "http://localhost:3000",
   "llamautoma.timeout": 30000,
   "llamautoma.model": "qwen2.5-coder:7b",
   "llamautoma.autoSync": true,
@@ -67,131 +70,89 @@ Add these configurations to your `coc-settings.json`:
 }
 ```
 
-### Key Mappings
+## 🎮 Commands
 
-Add these to your (Neo)vim configuration:
+The following commands can be executed using `:CocCommand`:
+
+### Core Commands
+- `llamautoma.chat`: Open interactive chat for code assistance
+- `llamautoma.sync`: Synchronize workspace with AI context
+
+Each command supports streaming responses for real-time feedback.
+
+## ⌨️ Example Keymaps
 
 ```vim
-" Chat with AI about current file
-nmap <silent> <Leader>lc :CocCommand llama.chat<CR>
-
-" Edit current file with AI
-nmap <silent> <Leader>le :CocCommand llama.edit<CR>
-
-" Generate new file with AI
-nmap <silent> <Leader>ln :CocCommand llama.compose<CR>
-
-" Sync workspace with AI
-nmap <silent> <Leader>ls :CocCommand llama.sync<CR>
+" Example key mappings
+nmap <silent> <Leader>lc :CocCommand llamautoma.chat<CR>
+nmap <silent> <Leader>ls :CocCommand llamautoma.sync<CR>
 ```
 
-## Commands
+## ⚙️ Configuration Options
 
-### `:CocCommand llamautoma.chat`
-- Opens an interactive chat window with the AI
-- Context-aware of your current file and workspace
-- Supports code snippets and multi-line input
-- Use `q` to close the chat window
-- History is preserved per session
+Available settings in coc-settings.json:
 
-### `:CocCommand llamautoma.edit`
-- Edit the current file with AI assistance
-- Supports multi-file edits
-- Shows preview of changes before applying
-- Safety checks for dangerous modifications
-- Undo/redo support for AI changes
+```json
+{
+  // Server Configuration
+  "llamautoma.enable": true,
+  "llamautoma.url": "http://localhost:3000",  // Local server URL
+  "llamautoma.timeout": 30000,                // Request timeout in ms
 
-### `:CocCommand llamautoma.compose`
-- Generate new files with AI
-- Supports multiple file generation
-- Context-aware of your project structure
-- Automatic import management
-- Template-based generation
+  // Model Configuration
+  "llamautoma.model": "qwen2.5-coder:7b",    // Default model
 
-### `:CocCommand llamautoma.sync`
-- Synchronize workspace with AI
-- Respects `.gitignore` patterns
-- Progress indicator for large workspaces
-- Selective sync support
-- Automatic periodic sync (if enabled)
+  // Sync Configuration
+  "llamautoma.autoSync": true,               // Auto-sync workspace
+  "llamautoma.syncOnSave": true,             // Sync on file save
+  "llamautoma.syncIgnorePatterns": [         // Files to ignore
+    "node_modules",
+    "dist",
+    "build",
+    ".git"
+  ],
 
-## Development
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/coc-llamautoma
-cd coc-llamautoma
-
-# Install dependencies
-bun install
-
-# Build the extension
-bun run build
-
-# Watch for changes
-bun run watch
-
-# Run tests
-bun test
-
-# Run tests with coverage
-bun test --coverage
+  // Safety Configuration
+  "llamautoma.maxFileSize": 1000000,         // Max file size in bytes
+  "llamautoma.logLevel": "info"              // Logging verbosity
+}
 ```
 
-## Project Structure
+## 🔒 Safety Features
 
-```
-coc-llamautoma/
-├── src/
-│   ├── client/        # Llamautoma client implementation
-│   ├── commands/      # Command implementations
-│   ├── config/        # Configuration management
-│   ├── handlers/      # LSP event handlers
-│   └── utils/         # Utility functions
-├── tests/
-│   ├── unit/         # Unit tests
-│   └── integration/  # Integration tests
-└── package.json
-```
+coc-llamautoma includes several safety features:
 
-## Troubleshooting
+- Request timeouts and size limits
+- Configurable file exclusions
+- Workspace synchronization controls
+- Error handling and recovery
+- Activity logging
 
-### Common Issues
+## 🐛 Troubleshooting
 
-1. **Server Connection Failed**
-   - Check if Llamautoma server is running
-   - Verify server URL in configuration
-   - Check network connectivity
+Common issues and solutions:
 
-2. **Command Not Found**
-   - Ensure extension is properly installed
-   - Run `:CocList extensions` to verify
-   - Try reinstalling the extension
+1. **Server Connection**
+   ```bash
+   # Check server status
+   curl http://localhost:3000/health
+   ```
 
-3. **Sync Issues**
-   - Check workspace permissions
-   - Verify `.gitignore` patterns
-   - Check file size limits
+2. **Extension Loading**
+   ```vim
+   :CocList extensions    " Check if extension is loaded
+   :CocInfo              " Check extension status
+   ```
 
-4. **Performance Issues**
-   - Reduce workspace size
-   - Adjust sync settings
-   - Update to latest version
+3. **Logs**
+   ```vim
+   :CocCommand workspace.showOutput
+   ```
 
-### Logs
+## 📝 License
 
-- View extension logs: `:CocCommand workspace.showOutput`
-- Select 'coc-llamautoma' from the output list
-- Set `llamautoma.logLevel` to "debug" for detailed logs
+MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Contributing
+## 🤝 Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-MIT
+Contributions are welcome! Please feel free to submit a Pull Request.
